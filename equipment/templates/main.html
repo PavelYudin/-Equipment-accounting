@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+	<link rel="stylesheet" href="{% static 'css/main.css' %}">
+	<title>Главная</title>
+{% endblock head %}
+
+{% block body %}
+	<div>
+		<div class="title">
+			<h1><a href="/delivery">Приход</a></h1>
+		</div>
+		<div class="title">
+			<h1><a href="/issue">Расход</a></h1>
+		</div>
+		<div class="title">
+			<h1><a href="/returned">Возврат</a></h1>
+		</div>
+		<div class="title">
+			<h1><a href="/repair">В ремонте</a></h1>
+		</div>
+		<div class="title">
+			<h1><a href="/basket">Списанное</a></h1>
+		</div>
+	</div>
+{% endblock body %}

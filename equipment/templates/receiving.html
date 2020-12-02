@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+	<link rel="stylesheet" href="{% static 'css/list_date.css' %}">
+	<link rel="stylesheet" href="{% static 'css/add_button.css' %}">
+	<link rel="stylesheet" href="{% static 'css/form.css' %}">
+	<script type="text/javascript" src="{% static 'js/add_record.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/hide_form.js' %}"></script>
+	<title>Приход оборудования</title>
+{% endblock head %}
+
+{% block body %}
+
+	<h3><a href="..">Назад</a></h3>
+	<h1>Приход</h1>
+	<a class="add">Добавить</a>
+	<div class="block_date">
+		{% for i in coming %}
+		<div class="line">
+			<div class="date">
+				<a href="/delivery/{{i.pk}}" title="{{i.supplier}}">{{ i.date|date:"d.m.Y"}}</a>
+			</div>
+			{% if i.file != "" %}
+			<div class="file">
+				<a href="{{ i.file.url }}" target="_blank">Скан</a>
+			</div>
+			{% endif%}
+		</div>
+		{% endfor %}
+		<div class="line">
+			<a href="delivery/all">Все полученное оборудование</a>
+		</div>
+	</div>
+	<form enctype="multipart/form-data" method="POST" action="/delivery/add">
+		{% csrf_token %}
+		<input type="submit" value="ОК"/>  
+		<div class="list">
+				<p>
+					<label for="supplier">От кого: </label>
+					<input type="text" name="supplier" autofocus size="30" value="" required>
+				</p>	
+				<p>
+					<label for="file">Загрузить накладную: </label>
+	                <input type="file" name="file" />
+	            </p>
+	          	<div class="add_record_btn"></div>          
+	    <div>      
+	</form>
+	<script>
+		let button=document.querySelector('.add');
+		let form=document.forms[0];
+		button.addEventListener('click',(e)=>{	
+			form.style.display="block";
+			form.querySelector(".list").append(add_record());
+		})
+		form.querySelector(".add_record_btn").addEventListener('click',(e)=>{
+			form.querySelector(".list").append(add_record());
+		})
+	</script>
+{% endblock body %}

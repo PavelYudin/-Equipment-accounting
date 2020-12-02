@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+	<link rel="stylesheet" href="{% static 'css/list_date.css' %}">
+	<title>Списанное оборудование</title>
+{% endblock head %}
+
+{% block body %}
+	<h3><a href="..">Назад</a></h3>
+	<h1>Списанное</h1>
+	<div class="block_date">
+		{% for i in coming %}
+		<div class="line">
+			<div class="date">
+				<a href="/basket/{{i.pk}}">{{ i.date|date:"d.m.Y"}}</a>
+			</div>
+			{% if i.file != "" %}
+			<div class="file">
+				<a href="{{ i.file.url }}" target="_blank">Скан</a>
+			</div>
+			{% endif%}
+		</div>
+		{% endfor %}
+		<div class="line">
+			<a href="basket/all">Все списанное оборудование</a>
+		</div>
+	</div>
+{% endblock body %}

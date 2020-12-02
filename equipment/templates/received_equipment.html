@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+	<link rel="stylesheet" href="{% static 'css/received equipment.css' %}">
+	<link rel="stylesheet" href="{% static 'css/form.css' %}">
+	<script type="text/javascript" src="{% static 'js/add_record.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/hide_form.js' %}"></script>
+	<title>{{ current_delivery.date }} {{current_delivery.supplier}}</title>
+{% endblock head %}
+
+{% block body %}
+<h1><a href="/delivery">Назад</a></h1>
+	<div class="d-table">
+		<div class="d-tr header">
+			<div class="d-td"><p>Наименование</p></div>
+			<div class="d-td"><p>Количество</p></div>
+			<div class="d-td"><p>Примечание</p></div>
+			<div class="d-td"><p>В наличии</p></div>
+		</div>	
+		{% for i in record %}
+		<div class="d-tr" data-pk="{{ i.pk }}">
+			<div class="d-td" data-name><p>{{ i.name }}</p></div>
+			<div class="d-td"><p>{{ i.count }}</p></div>
+			<div class="d-td" data-note><p>{{ i.note }}</p></div>
+			<div class="d-td" data-count><p>{{ i.in_stock }}</p></div>
+		</div>
+		{% endfor %}
+	</div>
+	<form enctype="multipart/form-data" method="POST" action="/delivery/transfer">
+		{% csrf_token %}
+		<input type="submit" value="ОК"/>  
+		<div class="list">
+				<p>
+					<label for="supplier">Кому: </label>
+					<input type="text" name="supplier" autofocus size="30" value="" required>
+				</p>	
+				<p>
+					<label for="file">Загрузить накладную: </label>
+	                <input type="file" name="file" />
+	            </p>     
+	    <div>      
+	</form>
+	<script type="text/javascript">
+		let form=document.forms[0];
+		function selected_position(elem){
+			return [...table.children].filter(elem => elem.classList.contains('selection'));
+		}
+
+		let table=document.querySelector('.d-table');
+		table.addEventListener('mousedown',(e)=>{
+			if(form.style.display==='block') return;
+			if(e.which==1){
+				if(e.target.closest('.d-tr') && !e.target.closest('.header')){
+					if(e.target.tagName=='P'){
+						if(e.target.parentElement.parentElement.children[3].textContent!=0){
+							e.target.parentElement.parentElement.classList.toggle('selection');
+						}
+					}else{
+						if(e.target.parentElement.children[3].textContent!=0){
+							e.target.parentElement.classList.toggle('selection');
+						}
+					}
+				}
+			}else if(e.which==2){
+				let elem;
+				if(e.target.tagName=='P'){
+					elem=e.target.parentElement.parentElement;
+				}
+				else if(e.target.tagName=='DIV'){
+					elem=e.target.parentElement;
+				}				
+				if(elem.classList.contains('selection')) {
+					let checked=selected_position(elem);
+					form.style.display="block";
+					for(let i=0;i<checked.length;i++){
+						let name=checked[i].querySelector('div[data-name]').textContent;
+						//let count=checked[i].children[1].textContent;
+						let note=checked[i].querySelector('div[data-note]').textContent;
+						let in_stock=checked[i].querySelector('div[data-count]').textContent;
+						let pk=checked[i].getAttribute('data-pk');
+						form.querySelector(".list").append(add_record(name,in_stock,note,pk));
+					}
+				}			
+			}
+		})
+	</script>
+{% endblock body %}

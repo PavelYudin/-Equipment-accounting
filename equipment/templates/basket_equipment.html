@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+	<meta charset="utf8">
+	<link rel="stylesheet" href="{% static 'css/received equipment.css' %}">
+	<title>{{ current_delivery.date }}</title>
+{% endblock head %}
+
+{% block body %}
+	<h1><a href="/basket">Назад</a></h1>
+	<div class="d-table">
+		<div class="d-tr header">
+			<div class="d-td"><p>Наименование</p></div>
+			<div class="d-td"><p>Количество</p></div>
+			<div class="d-td"><p>Примечание</p></div>
+		</div>	
+		{% for i in record %}
+		<div class="d-tr" data-pk="{{ i.pk }}">
+			<div class="d-td"><p>{{ i.name }}</p></div>
+			<div class="d-td"><p>{{ i.count }}</p></div>
+			<div class="d-td"><p>{{ i.note }}</p></div>
+		</div>
+		{% endfor %}
+	</div>
+{% endblock body %}

@@ -1,0 +1,30 @@
+from django.urls import path,re_path
+from .views import (receiving,received_equipment,add_equipment,
+    transfer,issue,issued_equipment,main,all_equipment,returns_add,
+    returned,returned_equipment,all_issued_equipment,all_returned_equipment,media)
+from .views import (basket_add,basket,basket_equipment,all_basket_equipment,
+    repair_add,repair,repair_equipment,out_of_repair)
+urlpatterns = [
+    re_path('media/',media),
+	path('delivery/add',add_equipment),
+    path('delivery/transfer',transfer),
+    path('issue/returns',returns_add),
+    path('returned',returned),
+    path('basket/add',basket_add),
+    path('basket',basket),
+    path('repair',repair),
+    path('basket/all',all_basket_equipment),
+    path('repair/add',repair_add),
+    path('returned/all',all_returned_equipment),
+    path('issue',issue),
+    path('issue/all',all_issued_equipment),
+    path('delivery',receiving),
+    path('delivery/all',all_equipment),
+    path('out_of_repair',out_of_repair),
+    path('delivery/<int:date_id>',received_equipment),
+    path('issue/<int:date_id>',issued_equipment),
+    path('returned/<int:date_id>',returned_equipment),
+    path('basket/<int:date_id>',basket_equipment),
+    path('repair/<int:date_id>',repair_equipment),
+    path('',main),
+]

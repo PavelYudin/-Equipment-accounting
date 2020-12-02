@@ -1,0 +1,30 @@
+.d-table{
+  width: 50%;
+  margin-left: 25%;
+  display: table;
+  border-collapse: collapse;
+  font-family: Verdana, Arial, Helvetica, sans-serif; 
+  table-layout: fixed;
+}
+.d-tr{
+  display: table-row;
+}
+.d-td{
+	word-wrap:break-word;
+	display: table-cell;
+	text-align: center;
+	border: none;
+	border: 1px dashed black;
+	vertical-align: middle;
+}
+.d-td:not(.no-p){
+  padding: 4px;
+}
+.header{
+	font-size: 140%;
+	font-weight: 600;
+}
+.selection{
+  background: #F5DEB3 ;
+}
+

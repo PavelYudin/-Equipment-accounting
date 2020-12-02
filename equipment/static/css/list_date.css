@@ -1,0 +1,41 @@
+h3{
+	margin-top: 0%;
+	font-size: 4vh;
+	text-align: center;
+}
+.block_date{
+	overflow: auto;
+	top:25%;
+	width: 36%;
+	height: 60%;
+	position: fixed;
+	margin-left: 32%;
+	min-height: 50vh;
+	background: #808080;
+	border-radius: 10px;
+	border: 1px solid black;
+	font-weight: 600;
+	font-size: 3vh;
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
+}
+a{ 
+	text-decoration: none;
+	color:black;
+}
+a:visited{
+	color:black;
+}
+.file a:hover{
+	text-decoration: underline;
+}
+.date a:hover{
+	font-size: 100%;
+	color:#c0c0c0;
+}
+.date,.file{
+	display: inline;	
+}
+.line{
+	text-align: center;
+}
+

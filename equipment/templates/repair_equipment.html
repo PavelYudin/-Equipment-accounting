@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+	<meta charset="utf8">
+	<link rel="stylesheet" href="{% static 'css/received equipment.css' %}">
+	<link rel="stylesheet" href="{% static 'css/form.css' %}">
+	<script type="text/javascript" src="{% static 'js/hide_form.js' %}"></script>
+	<title>{{ current_delivery.date_from }}{% if current_delivery.date_back != None %} - {{ current_delivery.date_back }} {% endif %}</title>
+{% endblock head %}
+
+{% block body %}
+	<h1><a href="/repair">Назад</a></h1>
+	<div class="d-table" data-pk="
+	{% if current_delivery.date_back == None %}
+		{{ current_delivery.id }}
+	{% else %}
+		-1
+	{% endif %}
+	">
+		<div class="d-tr header">
+			<div class="d-td"><p>Наименование</p></div>
+			<div class="d-td"><p>Количество</p></div>
+			<div class="d-td"><p>Примечание</p></div>
+		</div>	
+		{% for i in record %}
+		<div class="d-tr">
+			<div class="d-td"><p>{{ i.name }}</p></div>
+			<div class="d-td"><p>{{ i.count }}</p></div>
+			<div class="d-td"><p>{{ i.note }}</p></div>
+		</div>
+		{% endfor %}
+	</div>
+	<form>
+		{% csrf_token %}
+		<input type="submit" value="ОК"/>  
+		<div class="list">
+				<p>
+					<label for="file">Загрузить накладную: </label>
+	                <input type="file" name="file" />
+	            </p>     
+	    <div>     
+	</form>
+	<script>
+		let table=document.querySelector('.d-table');
+		let data_pk=+table.getAttribute('data-pk');
+		let form=document.forms[0];
+		let button=form.querySelector('input[type="submit"]')
+		let checked;
+		table.addEventListener('mousedown',(e)=>{
+			if(data_pk<0) return;
+			if(form.style.display==='block') return;
+			if(e.which==1){
+				if(e.target.closest('.d-tr') && !e.target.closest('.header')){
+					let selected=table.querySelectorAll('.d-tr');
+					checked=Array.prototype.slice.call(selected,1);
+					checked.forEach(item=>{item.classList.toggle('selection')})
+				}
+			}else if(e.which==2){
+				if(e.target.parentElement.classList.contains('selection') || e.target.parentElement.parentElement.classList.contains('selection')){
+					form.style.display="block";
+					
+				}		
+			}
+		});
+		button.addEventListener('click',(e)=>{
+			let formData=new FormData(form)
+			formData.append('pk',data_pk)
+			let url='/out_of_repair';
+			context={
+				method: 'POST',
+  				body:formData
+			}
+			e.preventDefault();
+			fetch(url,context)
+			.then(response =>response.json())
+			.then(res=>{
+				document.location.href = res['url'];
+			})
+		});
+	</script>
+{% endblock body %}

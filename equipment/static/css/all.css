@@ -1,0 +1,21 @@
+* {
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+  	-moz-user-select: none;
+  	-ms-user-select: none;
+  	user-select: none;
+}
+body{background: #c0c0c0;}
+h1{
+	color:black;
+	font-weight:900;
+	font-size: 300%;
+	text-align:  center;
+}
+a{
+	text-decoration: none;
+	color: black;
+}
+a:active{
+ 	cursor: pointer;
+}

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+	<meta charset="utf8">
+	<link rel="stylesheet" href="{% static 'css/received equipment.css' %}">
+	<link rel="stylesheet" href="{% static 'css/form.css' %}">
+	<script type="text/javascript" src="{% static 'js/add_record.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/hide_form.js' %}"></script>
+	<title>{{ current_delivery.date }} - {{current_delivery.supplier}}</title>
+{% endblock head %}
+
+{% block body %}
+	<h1><a href="/returned">Назад</a></h1>
+	<div class="d-table">
+		<div class="d-tr header">
+			<div class="d-td"><p>Наименование</p></div>
+			<div class="d-td"><p>Количество</p></div>
+			<div class="d-td"><p>Примечание</p></div>
+			<div class="d-td"><p>В ремонт</p></div>
+		</div>	
+		{% for i in record %}
+		<div class="d-tr" data-pk="{{ i.pk }}">
+			<div class="d-td"><p>{{ i.name }}</p></div>
+			<div class="d-td"><p>{{ i.count }}</p></div>
+			<div class="d-td"><p>{{ i.note }}</p></div>
+			<div class="d-td" data-repair="{{ i.repair }}">
+				<p>
+				{% if i.repair %}
+	   				Да
+				{% else %}
+	    			Нет
+				{% endif %}
+				</p>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+	<form enctype="multipart/form-data" method="POST" action="/repair/add">
+		{% csrf_token %}
+		<input type="submit" value="ОК"/>  
+		<div class="list">
+				<p>
+					<label for="supplier">Cписать: </label>
+					<input type="checkbox" name="checkbox">
+				</p>
+				<p>
+					<label for="service_center">Куда: </label>
+					<input type="text" name="service_center" autofocus size="30" value="" required>
+				</p>	
+				<p>
+					<label for="file">Загрузить накладную: </label>
+	                <input type="file" name="file" />
+	            </p>     
+	    <div>      
+	</form>
+	<script type="text/javascript">
+		let div_list=document.querySelector('.list').children[1];
+		let checkbox=document.querySelector('input[type="checkbox"]');
+		checkbox.addEventListener('mousedown',(e)=>{
+			div_list.children[1].required=!div_list.children[1].required;
+			if(e.target.checked){
+				div_list.style.display='block';
+				form.setAttribute('action','/repair/add')
+			}else{
+				div_list.style.display='none';
+				form.setAttribute('action','/basket/add')
+			}
+		})
+		let form=document.forms[0];
+		function selected_position(elem){
+			return [...table.children].filter(elem => elem.classList.contains('selection'));
+		}
+
+		let table=document.querySelector('.d-table');
+		table.addEventListener('mousedown',(e)=>{
+			if(form.style.display==='block') return;
+			if(e.which==1){
+				if(e.target.closest('.d-tr') && !e.target.closest('.header')){
+					if(e.target.tagName=='P'){
+						if(e.target.parentElement.parentElement.children[3].dataset.repair==='True' && e.target.parentElement.parentElement.children[1].textContent!=0){
+							e.target.parentElement.parentElement.classList.toggle('selection');
+						}
+					}else{
+						if(e.target.parentElement.children[3].dataset.repair==='True' && e.target.parentElement.children[1].textContent!=0){
+							e.target.parentElement.classList.toggle('selection');
+						}
+					}
+				}
+			}else if(e.which==2){
+				let elem;
+				if(e.target.tagName=='P'){
+					elem=e.target.parentElement.parentElement;
+				}
+				else if(e.target.tagName=='DIV'){
+					elem=e.target.parentElement;
+				}				
+				if(elem.classList.contains('selection')) {
+					let checked=selected_position(elem);
+					form.style.display="block";
+					for(let i=0;i<checked.length;i++){
+						let name=checked[i].children[0].textContent;
+						let count=checked[i].children[1].textContent;
+						let note=checked[i].children[2].textContent;
+						let pk=checked[i].getAttribute('data-pk');
+						form.querySelector(".list").append(add_record(name,count,note,pk));
+					}
+				}
+			}
+		})
+	</script>
+	
+{% endblock body %}

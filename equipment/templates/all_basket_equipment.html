@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+	<meta charset="utf8">
+	<link rel="stylesheet" href="{% static 'css/received equipment.css' %}">
+	<script type="text/javascript" src="{% static 'js/sort.js' %}"></script>
+	<title>Все выданное оборудование</title>
+{% endblock head %}
+
+{% block body %}
+	<h1><a href="/basket">Назад</a></h1>
+	<div class="d-table">
+		<div class="d-tr header">
+			<div class="d-td"><p>Дата</p></div>
+			<div class="d-td"><p>Наименование</p></div>
+			<div class="d-td"><p>Количество</p></div>
+			<div class="d-td"><p>Примечание</p></div>
+		</div>	
+		{% for i in record %}
+		<div class="d-tr" data-pk="{{ i.pk }}">
+			<div class="d-td"><p>{{ i.date|date:"d.m.Y" }}</p></div>
+			<div class="d-td" data-name><p>{{ i.name }}</p></div>
+			<div class="d-td" data-return_count><p>{{ i.count }}</p></div>
+			<div class="d-td" data-note><p>{{ i.note }}</p></div>
+		</div>
+		{% endfor %}
+	</div>	
+	<script>
+		let sign=-1;
+		let table=document.querySelector('.d-table');
+		table.addEventListener('click',(e)=>{
+			if(e.target.closest('.header')) sorting(e);
+		});
+	</script>
+{% endblock body %}
